@@ -1,0 +1,59 @@
+# Node modules and npm files
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Next.js files
+.next
+out
+
+# Environment files (use mounted volumes instead)
+.env
+.env.local
+.env.production.local
+
+# Git files
+.git
+.gitignore
+.github
+
+# Documentation
+README.md
+DEPLOYMENT.md
+*.md
+
+# Test files
+tests
+*.test.js
+*.test.ts
+jest.config.js
+coverage
+
+# IDE files
+.idea
+.vscode
+*.swp
+*.swo
+.DS_Store
+
+# Temporary files
+tmp
+temp
+*.tmp
+*.log
+
+# Build artifacts that aren't needed
+dist
+build
+
+# PM2 files
+ecosystem.config.js
+.pm2
+
+# Docker files (prevent recursion)
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Scripts (except necessary ones)
+scripts/*.sh
