@@ -1,0 +1,41 @@
+[Unit]
+Description=TikTok Video Analyzer - AI-powered video analysis service
+Documentation=https://github.com/yourusername/tiktok-video-analyzer
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/var/www/tiktok-analyzer
+ExecStartPre=/usr/bin/npm run build
+ExecStart=/usr/bin/npm start
+Restart=always
+RestartSec=10
+
+# 环境变量
+Environment="NODE_ENV=production"
+Environment="PORT=3000"
+EnvironmentFile=/var/www/tiktok-analyzer/.env.production
+
+# 资源限制
+LimitNOFILE=65536
+LimitNPROC=512
+
+# 日志
+StandardOutput=append:/var/log/tiktok-analyzer/output.log
+StandardError=append:/var/log/tiktok-analyzer/error.log
+
+# 安全设置
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/www/tiktok-analyzer
+
+# 超时设置
+TimeoutStartSec=90
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target
