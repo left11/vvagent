@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  tiktok-analyzer:
+    build: .
+    container_name: tiktok-analyzer
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      # Google Cloud Storage
+      - GCS_BUCKET_NAME=${GCS_BUCKET_NAME}
+      - GCS_PROJECT_ID=${GCS_PROJECT_ID}
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/config/service-account.json
+      # Vertex AI
+      - VERTEX_PROJECT_ID=${VERTEX_PROJECT_ID:-public-service-220606}
+      - VERTEX_LOCATION=${VERTEX_LOCATION:-us-central1}
+      # Application
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+      - TEMP_STORAGE_PATH=/tmp/tiktok-videos
+      - MAX_VIDEO_SIZE_MB=${MAX_VIDEO_SIZE_MB:-500}
+    volumes:
+      # 挂载 Service Account 文件
+      - ./config:/app/config:ro
+      # 挂载环境变量文件（可选）
+      - ./.env.production:/app/.env.production:ro
+      # 持久化日志（可选）
+      - ./logs:/app/logs
+      # 临时文件目录
+      - /tmp/tiktok-videos:/tmp/tiktok-videos
+    networks:
+      - app-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 2G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  app-network:
+    driver: bridge

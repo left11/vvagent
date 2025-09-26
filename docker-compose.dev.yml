@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  tiktok-dev:
+    # Node.js 22 官方镜像，包含 npm
+    image: node:22-alpine
+    container_name: tiktok-dev
+    working_dir: /app
+    
+    # 保持容器运行
+    command: sh -c "apk add --no-cache ffmpeg chromium nss freetype harfbuzz ca-certificates ttf-freefont && tail -f /dev/null"
+    
+    # 或直接启动应用（取消下面的注释）
+    # command: sh -c "apk add --no-cache ffmpeg chromium && npm install && npm run dev"
+    
+    ports:
+      - "3000:3000"
+    
+    environment:
+    
+      # Node 环境
+      - NODE_ENV=development
+      # Google Cloud
+      - GCS_BUCKET_NAME=public-test-bucket-2025
+      - GCS_PROJECT_ID=public-service-220606
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/config/service-account.json
+      - VERTEX_PROJECT_ID=public-service-220606
+      - VERTEX_LOCATION=us-central1
+      # 应用配置
+      - NEXT_PUBLIC_APP_URL=http://localhost:3000
+      - TEMP_STORAGE_PATH=/tmp/tiktok-videos
+      - MAX_VIDEO_SIZE_MB=500
+    
+    volumes:
+      # 挂载整个项目目录
+      - .:/app
+      # node_modules 使用匿名卷，避免覆盖
+      - /app/node_modules
+      # 挂载 npm 缓存（加速安装）
+      - ~/.npm:/root/.npm
+    
+    stdin_open: true
+    tty: true
+    
+    networks:
+      - dev-network
+
+networks:
+  dev-network:
+    driver: bridge
