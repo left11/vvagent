@@ -54,8 +54,13 @@ export default function Home() {
         
         for (const line of lines) {
           if (line.startsWith('data: ')) {
+            const jsonStr = line.slice(6).trim();
+            // 跳过空数据
+            if (!jsonStr || jsonStr === '[DONE]') {
+              continue;
+            }
             try {
-              const data = JSON.parse(line.slice(6));
+              const data = JSON.parse(jsonStr);
               
               if (data.status) {
                 setStatus(data.status);
