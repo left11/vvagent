@@ -183,10 +183,10 @@ class SnapAnyParser {
         };
       }
 
-      // 解析结果
+      // 解析结果（确保platform是小写）
       const result: ParseResult = {
         success: false,
-        platform: platform.toLowerCase(),
+        platform: platform.toLowerCase() as any,
       };
 
       // 提取视频信息

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Send, Download, Copy, Check, Loader2 } from 'lucide-react';
 
 // 支持的平台类型
-type Platform = 'tiktok' | 'douyin' | 'youtube' | 'instagram' | 'bilibili' | 'unknown';
+type Platform = 'tiktok' | 'douyin' | 'youtube' | 'instagram' | 'bilibili' | 'facebook' | 'twitter' | 'unknown';
 
 // 解析结果
 interface ParseResult {
@@ -42,6 +42,8 @@ export default function V2Page() {
     if (url.includes('youtube.com') || url.includes('youtu.be')) return 'youtube';
     if (url.includes('instagram.com')) return 'instagram';
     if (url.includes('bilibili.com') || url.includes('b23.tv')) return 'bilibili';
+    if (url.includes('facebook.com') || url.includes('fb.watch')) return 'facebook';
+    if (url.includes('twitter.com') || url.includes('x.com')) return 'twitter';
     return 'unknown';
   };
 
@@ -86,6 +88,8 @@ export default function V2Page() {
     youtube: { name: 'YouTube', color: 'bg-red-600', emoji: '📺' },
     instagram: { name: 'Instagram', color: 'bg-gradient-to-r from-purple-500 to-pink-500', emoji: '📷' },
     bilibili: { name: 'B站', color: 'bg-blue-500', emoji: '🎬' },
+    facebook: { name: 'Facebook', color: 'bg-blue-600', emoji: '👥' },
+    twitter: { name: 'X/Twitter', color: 'bg-black', emoji: '🐦' },
     unknown: { name: '未知', color: 'bg-gray-500', emoji: '❓' }
   };
 
@@ -100,7 +104,7 @@ export default function V2Page() {
             多平台视频解析 V2
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300">
-            支持抖音、TikTok、YouTube、Instagram、B站等平台
+            支持抖音、TikTok、YouTube、Instagram、B站、Facebook、X/Twitter等平台
           </p>
           <div className="flex justify-center gap-2 mt-4">
             {Object.entries(platformConfig).map(([key, config]) => (
