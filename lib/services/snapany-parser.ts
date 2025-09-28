@@ -19,7 +19,8 @@ export const PLATFORM_CONFIG = {
 // API 密钥
 const KEY_NEW_API = '6HTugjCXxR';
 const KEY_OLD_API = '2HT8gjE3xL';
-const API_URL = 'https://api.snapany.com/v1/extract';
+const NEW_API_URL = 'https://api.snapany.com/v1/extract';
+const OLD_API_URL = 'https://service.iiilab.com/iiilab/extract';
 
 // 媒体类型
 export interface Media {
@@ -111,22 +112,29 @@ class SnapAnyParser {
       'Content-Type': 'application/json',
     };
 
-    const data: any = {
-      link: url,
-    };
-
-    // 新 API 需要设置语言
+    // 根据API类型设置不同的参数和URL
+    let apiUrl: string;
+    let data: any;
+    
     if (config.useNewApi) {
+      // 新 API 使用 Accept-Language 头和 link 字段
       headers['Accept-Language'] = s1;
+      apiUrl = NEW_API_URL;
+      data = { link: url };
     } else {
-      // 旧 API 需要 site 参数（但我们只用新 API）
-      data.site = s1;
+      // 旧 API 使用 site 参数和 url 字段
+      apiUrl = OLD_API_URL;
+      data = {
+        url: url,
+        site: s1
+      };
     }
 
     try {
-      console.log(`[SnapAny] Calling API for ${platform}:`, url);
+      console.log(`[SnapAny] Calling ${config.useNewApi ? 'NEW' : 'OLD'} API for ${platform}:`, url);
+      console.log(`[SnapAny] API URL: ${apiUrl}`);
       
-      const response = await fetch(API_URL, {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers,
         body: JSON.stringify(data),
